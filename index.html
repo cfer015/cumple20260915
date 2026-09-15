@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feliz Cumpleaños</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Parisienne&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --sky-top:#fdf1e6;
+    --sky-bottom:#f6e0d3;
+    --blossom-1:#eeaebd;
+    --blossom-2:#f6cdd6;
+    --leaf-1:#a9c48a;
+    --leaf-2:#7fa66a;
+    --trunk:#6b4a3a;
+    --trunk-dark:#4d342a;
+    --ink:#4a3b33;
+    --ink-soft:#7a6659;
+    --card:#fffaf4;
+  }
+
+  *{box-sizing:border-box;}
+
+  html,body{
+    margin:0;
+    padding:0;
+    height:100%;
+    overflow-x:hidden;
+    background:linear-gradient(180deg,var(--sky-top) 0%, var(--sky-bottom) 65%, #f1d9c8 100%);
+    font-family:'Cormorant Garamond', serif;
+    color:var(--ink);
+  }
+
+  .scene{
+    position:relative;
+    min-height:100vh;
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:6vh 5vw;
+  }
+
+  /* ground */
+  .ground{
+    position:absolute;
+    bottom:0;
+    left:0;
+    width:100%;
+    height:14vh;
+    background:linear-gradient(180deg, #d9c7a1 0%, #c9b287 100%);
+    border-top:2px solid rgba(107,74,58,0.15);
+  }
+
+  /* tree */
+  .tree-wrap{
+    position:absolute;
+    right:2vw;
+    bottom:8vh;
+    width:min(46vw, 560px);
+    height:min(70vh, 720px);
+    pointer-events:none;
+    opacity:0.92;
+  }
+  .tree-wrap svg{ width:100%; height:100%; display:block; overflow:visible; }
+
+  .trunk-group{
+    transform-origin:200px 600px;
+    animation:trunk-sway 7s ease-in-out infinite;
+  }
+  @keyframes trunk-sway{
+    0%,100%{ transform:rotate(0deg); }
+    50%{ transform:rotate(0.6deg); }
+  }
+
+  .branch-left{ transform-origin:198px 460px; animation:branch-left-sway 5.5s ease-in-out infinite; }
+  .branch-right{ transform-origin:202px 460px; animation:branch-right-sway 6s ease-in-out infinite; }
+  @keyframes branch-left-sway{
+    0%,100%{ transform:rotate(0deg); }
+    50%{ transform:rotate(-1.6deg); }
+  }
+  @keyframes branch-right-sway{
+    0%,100%{ transform:rotate(0deg); }
+    50%{ transform:rotate(1.6deg); }
+  }
+
+  .canopy-cluster{
+    transform-box:fill-box;
+    transform-origin:center;
+    animation:canopy-sway 6.5s ease-in-out infinite;
+    animation-delay:var(--d, 0s);
+  }
+  @keyframes canopy-sway{
+    0%,100%{ transform:translate(0,0) rotate(0deg); }
+    50%{ transform:translate(2px,-3px) rotate(0.8deg); }
+  }
+
+  .blossom{
+    transform-box:fill-box;
+    transform-origin:center;
+    animation:blossom-pulse 4s ease-in-out infinite;
+    animation-delay:var(--d, 0s);
+  }
+  @keyframes blossom-pulse{
+    0%,100%{ opacity:1; transform:scale(1); }
+    50%{ opacity:0.85; transform:scale(1.04); }
+  }
+
+  .twig-leaf{
+    transform-box:fill-box;
+    transform-origin:center;
+    animation:twig-flutter 3s ease-in-out infinite;
+    animation-delay:var(--d, 0s);
+  }
+  @keyframes twig-flutter{
+    0%,100%{ transform:rotate(0deg); }
+    50%{ transform:rotate(8deg); }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .trunk-group, .branch-left, .branch-right, .canopy-cluster, .blossom, .twig-leaf{
+      animation:none;
+    }
+  }
+
+  /* falling leaves */
+  .leaves-layer{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    overflow:hidden;
+    z-index:5;
+  }
+  .leaf{
+    position:absolute;
+    top:-5vh;
+    will-change:transform, opacity;
+    animation-name:fall, sway;
+    animation-timing-function:linear, ease-in-out;
+    animation-iteration-count:infinite, infinite;
+  }
+  @keyframes fall{
+    0%{ transform:translateY(-5vh); }
+    100%{ transform:translateY(110vh); }
+  }
+  @keyframes sway{
+    0%,100%{ margin-left:0; }
+    50%{ margin-left:40px; }
+  }
+
+  /* card */
+  .card{
+    position:relative;
+    z-index:10;
+    max-width:560px;
+    width:100%;
+    background:var(--card);
+    border-radius:4px 22px 4px 22px;
+    padding:52px 44px 44px;
+    box-shadow:0 30px 60px -20px rgba(77,52,42,0.25);
+    border:1px solid rgba(107,74,58,0.12);
+  }
+
+  .card::before{
+    content:"";
+    position:absolute;
+    top:14px; left:14px; right:14px; bottom:14px;
+    border:1px solid rgba(107,74,58,0.15);
+    border-radius:2px 16px 2px 16px;
+    pointer-events:none;
+  }
+
+  .heading{
+    font-family:'Parisienne', cursive;
+    font-size:clamp(2.4rem, 5vw, 3.4rem);
+    color:#c9758a;
+    margin:0 0 6px;
+    line-height:1;
+    text-align:center;
+  }
+
+  .subheading{
+    text-align:center;
+    font-style:italic;
+    color:var(--ink-soft);
+    font-size:1.05rem;
+    margin:0 0 30px;
+    letter-spacing:0.02em;
+  }
+
+  .message{
+    font-size:clamp(1.15rem, 2vw, 1.35rem);
+    line-height:1.75;
+    color:var(--ink);
+    text-align:left;
+    margin:0;
+  }
+
+  .signature{
+    margin-top:30px;
+    text-align:right;
+    font-family:'Parisienne', cursive;
+    font-size:1.8rem;
+    color:#c9758a;
+  }
+
+  .sprig{
+    display:flex;
+    justify-content:center;
+    margin-top:8px;
+    opacity:0.8;
+  }
+
+  @media (max-width: 760px){
+    .tree-wrap{
+      width:78vw;
+      height:38vh;
+      right:auto;
+      left:50%;
+      transform:translateX(-50%);
+      bottom:auto;
+      top:0;
+      opacity:0.35;
+    }
+    .scene{
+      align-items:flex-end;
+      padding-bottom:6vh;
+    }
+    .card{ padding:40px 26px 32px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .leaf{ animation:none; opacity:0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="scene">
+  <div class="ground"></div>
+
+  <div class="tree-wrap" aria-hidden="true">
+    <svg viewBox="0 0 400 600" xmlns="http://www.w3.org/2000/svg">
+      <g class="trunk-group">
+        <path d="M200 600 L195 420 C 190 400, 205 400, 200 420 Z" fill="var(--trunk)"/>
+        <g class="branch-left">
+          <path d="M198 460 C 150 430, 120 400, 100 340 C 130 360, 165 385, 197 420 Z" fill="var(--trunk)"/>
+          <path d="M198 500 C 170 480, 150 460, 140 430 C 160 445, 182 465, 197 490 Z" fill="var(--trunk-dark)"/>
+        </g>
+        <g class="branch-right">
+          <path d="M202 460 C 250 430, 280 400, 300 340 C 270 360, 235 385, 203 420 Z" fill="var(--trunk)"/>
+          <path d="M202 500 C 230 480, 250 460, 260 430 C 240 445, 218 465, 203 490 Z" fill="var(--trunk-dark)"/>
+        </g>
+      </g>
+
+      <g class="canopy-cluster" style="--d:0s">
+        <ellipse class="blossom" style="--d:0.2s" cx="120" cy="300" rx="95" ry="80" fill="var(--blossom-2)"/>
+        <ellipse class="blossom" style="--d:0.6s" cx="230" cy="260" rx="115" ry="95" fill="var(--blossom-1)"/>
+      </g>
+      <g class="canopy-cluster" style="--d:0.4s">
+        <ellipse class="blossom" style="--d:0.9s" cx="300" cy="330" rx="90" ry="75" fill="var(--blossom-2)"/>
+        <ellipse class="blossom" style="--d:1.3s" cx="180" cy="200" rx="100" ry="80" fill="var(--blossom-1)"/>
+      </g>
+      <g class="canopy-cluster" style="--d:0.8s">
+        <ellipse class="blossom" style="--d:0.1s" cx="90" cy="220" rx="70" ry="60" fill="var(--blossom-2)"/>
+        <ellipse class="blossom" style="--d:1.6s" cx="270" cy="200" rx="75" ry="60" fill="var(--blossom-2)"/>
+        <ellipse class="blossom" style="--d:2.1s" cx="200" cy="150" rx="80" ry="60" fill="var(--blossom-1)"/>
+      </g>
+
+      <g>
+        <ellipse class="twig-leaf" style="--d:0s" cx="150" cy="260" rx="14" ry="10" fill="var(--leaf-1)" opacity="0.85"/>
+        <ellipse class="twig-leaf" style="--d:0.5s" cx="260" cy="300" rx="16" ry="11" fill="var(--leaf-2)" opacity="0.85"/>
+        <ellipse class="twig-leaf" style="--d:1s" cx="200" cy="330" rx="12" ry="9" fill="var(--leaf-1)" opacity="0.85"/>
+        <ellipse class="twig-leaf" style="--d:1.4s" cx="110" cy="330" rx="13" ry="9" fill="var(--leaf-2)" opacity="0.8"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="card">
+    <p class="heading">Feliz cumpleaños</p>
+    <p class="subheading">a la persona más especial que tengo a mi lado</p>
+    <p class="message">
+      Hoy celebro la vida de la persona más especial que tengo a mi lado.
+      Gracias por iluminar mis días con tu sonrisa, por cada abrazo y por
+      ser mi compañera. Deseo que este nuevo año de vida esté lleno de
+      momentos inolvidables, sueños cumplidos y muchísima felicidad.
+      Te amo hoy y siempre.
+    </p>
+    <p class="signature">— con todo mi amor</p>
+    <div class="sprig">
+      <svg width="60" height="16" viewBox="0 0 60 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 8 H58" stroke="#c9758a" stroke-width="1"/>
+        <circle cx="30" cy="8" r="3" fill="#c9758a"/>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<div class="leaves-layer" id="leaves"></div>
+
+<script>
+  const colors = ['#eeaebd', '#f6cdd6', '#a9c48a', '#7fa66a', '#f2b6a0'];
+  const layer = document.getElementById('leaves');
+  const total = 26;
+
+  function makeLeaf(i){
+    const el = document.createElement('div');
+    el.className = 'leaf';
+    const size = 8 + Math.random() * 8;
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    const left = Math.random() * 100;
+    const fallDuration = 9 + Math.random() * 8;
+    const swayDuration = 2.5 + Math.random() * 2;
+    const delay = Math.random() * 14;
+    const rotate = Math.random() * 360;
+
+    el.style.left = left + 'vw';
+    el.style.width = size + 'px';
+    el.style.height = (size * 0.8) + 'px';
+    el.style.background = color;
+    el.style.borderRadius = '0% 70% 0% 70%';
+    el.style.transform = 'rotate(' + rotate + 'deg)';
+    el.style.animationDuration = fallDuration + 's, ' + swayDuration + 's';
+    el.style.animationDelay = '-' + delay + 's, -' + (Math.random()*swayDuration) + 's';
+    el.style.opacity = 0.55 + Math.random() * 0.4;
+
+    layer.appendChild(el);
+  }
+
+  for(let i = 0; i < total; i++){ makeLeaf(i); }
+</script>
+
+</body>
+</html>
